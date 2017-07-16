@@ -19,15 +19,17 @@ import static android.R.attr.resource;
  */
 
 public class MenuItemAdapter extends ArrayAdapter<MenuItem> {
-    public MenuItemAdapter(@NonNull Context context, @NonNull List<MenuItem> objects) {
+    private final int menuTemplateResource;
+    public MenuItemAdapter(@NonNull Context context, @NonNull List<MenuItem> objects, int menuTemplateResource) {
         super(context, 0, objects);
+        this.menuTemplateResource = menuTemplateResource;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
 
         View menuItemView = convertView;
         if (menuItemView == null) {
-            menuItemView = LayoutInflater.from(getContext()).inflate(R.layout.add_meal_menu_item, parent, false);
+            menuItemView = LayoutInflater.from(getContext()).inflate(menuTemplateResource, parent, false);
         }
 
         MenuItem currentItem = getItem(position);
