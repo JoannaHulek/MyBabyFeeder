@@ -11,11 +11,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import java.text.DateFormat;
+import com.example.joannahulek.mybabyfeeder.data.MealContract.MealEntry;
+
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.example.joannahulek.mybabyfeeder.specifics.BabyMeal.DATE_INSTANCE;
+import static com.example.joannahulek.mybabyfeeder.data.MealContract.*;
 import static com.example.joannahulek.mybabyfeeder.data.MealDbHelper.LOG_TAG;
 
 /**
@@ -24,7 +26,15 @@ import static com.example.joannahulek.mybabyfeeder.data.MealDbHelper.LOG_TAG;
 
 public class MealProvider extends ContentProvider {
 
-    private final static DateFormat format = SimpleDateFormat.getDateInstance();
+    private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+    private static final int MEALS = 100;
+    private static final int MEAL_ID = 101;
+
+    static {
+        sUriMatcher.addURI(CONTENT_AUTHORITY, PATH_MEALS, MEALS);
+        sUriMatcher.addURI(CONTENT_AUTHORITY, PATH_MEALS + "/#", MEAL_ID);
+    }
+
     private MealDbHelper mDbHelper;
 
     @Override
@@ -32,11 +42,6 @@ public class MealProvider extends ContentProvider {
         mDbHelper = new MealDbHelper(getContext());
         return true;
     }
-
-    private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-    private static final int MEALS = 100;
-    private static final int MEAL_ID = 101;
-
 
     @Nullable
     @Override
@@ -49,13 +54,13 @@ public class MealProvider extends ContentProvider {
         int match = sUriMatcher.match(uri);
         switch (match) {
             case MEALS:
-                cursor = database.query(MealContract.MealEntry.TABLE_NAME, projection, selection, selectionArgs,
+                cursor = database.query(MealEntry.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
                 break;
             case MEAL_ID:
-                selection = MealContract.MealEntry._ID + "=?";
+                selection = MealEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                cursor = database.query(MealContract.MealEntry.TABLE_NAME, projection, selection, selectionArgs,
+                cursor = database.query(MealEntry.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
                 break;
             default:
@@ -71,9 +76,9 @@ public class MealProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case MEALS:
-                return MealContract.MealEntry.CONTENT_LIST_TYPE;
+                return MealEntry.CONTENT_LIST_TYPE;
             case MEAL_ID:
-                return MealContract.MealEntry.CONTENT_ITEM_TYPE;
+                return MealEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
         }
@@ -92,30 +97,11 @@ public class MealProvider extends ContentProvider {
     }
 
     private Uri insertMeal(Uri uri, ContentValues values) {
-        MealType mealType = MealType.valueOf(values.getAsString(MealContract.MealEntry.COLUMN_MEAL_TYPE));
-        if (mealType == null) {
-            throw new IllegalArgumentException("Select type of meal");
-        }
-
-        Short capacity = values.getAsShort(MealContract.MealEntry.COLUMN_CAPACITY);
-        if (capacity == null || capacity < 0) {
-            throw new IllegalArgumentException("Set capacity of meal [ml]");
-        }
-
-        Byte duration = values.getAsByte(MealContract.MealEntry.COLUMN_DURATION);
-        if (duration == null || duration < 0) {
-            throw new IllegalArgumentException("Set duration time [min]");
-        }
-
-        try {
-            Date date = format.parse(values.getAsString(MealContract.MealEntry.COLUMN_TIME));
-        } catch (ParseException e) {
-            throw new IllegalArgumentException("Set date and time of meal");
-        }
+        validateValues(values);
 
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
-        long id = database.insert(MealContract.MealEntry.TABLE_NAME, null, values);
+        long id = database.insert(MealEntry.TABLE_NAME, null, values);
         if (id == -1) {
             Log.e(LOG_TAG, "Failed to insert row for " + uri);
             return null;
@@ -126,6 +112,30 @@ public class MealProvider extends ContentProvider {
         return ContentUris.withAppendedId(uri, id);
     }
 
+    private void validateValues(ContentValues values) {
+        String mealTypeAsString = values.getAsString(MealEntry.COLUMN_MEAL_TYPE);
+        if (mealTypeAsString == null) {
+            throw new IllegalArgumentException("Select type of meal");
+        }
+        MealType mealType = MealType.valueOf(mealTypeAsString);
+
+        Short capacity = values.getAsShort(MealEntry.COLUMN_CAPACITY);
+        if (capacity == null || capacity < 0) {
+            throw new IllegalArgumentException("Set capacity of meal [ml]");
+        }
+
+        Short duration = values.getAsShort(MealEntry.COLUMN_DURATION);
+        if (duration == null || duration < 0) {
+            throw new IllegalArgumentException("Set duration time [min]");
+        }
+
+        try {
+            Date date = DATE_INSTANCE.parse(values.getAsString(MealEntry.COLUMN_TIME));
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("Set date and time of meal");
+        }
+    }
+
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
@@ -134,12 +144,12 @@ public class MealProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case MEALS:
-                rowsDeleted = database.delete(MealContract.MealEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = database.delete(MealEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             case MEAL_ID:
-                selection = MealContract.MealEntry._ID + "=?";
+                selection = MealEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                rowsDeleted = database.delete(MealContract.MealEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = database.delete(MealEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
@@ -160,7 +170,7 @@ public class MealProvider extends ContentProvider {
             case MEALS:
                 return updateMeal(uri, values, selection, selectionArgs);
             case MEAL_ID:
-                selection = MealContract.MealEntry._ID + "=?";
+                selection = MealEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updateMeal(uri, values, selection, selectionArgs);
             default:
@@ -170,30 +180,30 @@ public class MealProvider extends ContentProvider {
 
     private int updateMeal(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 
-        if (values.containsKey(MealContract.MealEntry.COLUMN_MEAL_TYPE)) {
-            MealType mealType = MealType.valueOf(values.getAsString(MealContract.MealEntry.COLUMN_MEAL_TYPE));
+        if (values.containsKey(MealEntry.COLUMN_MEAL_TYPE)) {
+            MealType mealType = MealType.valueOf(values.getAsString(MealEntry.COLUMN_MEAL_TYPE));
             if (mealType == null) {
                 throw new IllegalArgumentException("Select type of meal");
             }
         }
 
-        if (values.containsKey(MealContract.MealEntry.COLUMN_CAPACITY)) {
-            Short capacity = values.getAsShort(MealContract.MealEntry.COLUMN_CAPACITY);
+        if (values.containsKey(MealEntry.COLUMN_CAPACITY)) {
+            Short capacity = values.getAsShort(MealEntry.COLUMN_CAPACITY);
             if (capacity == null || capacity < 0) {
                 throw new IllegalArgumentException("Set capacity of meal [ml]");
             }
         }
 
-        if (values.containsKey(MealContract.MealEntry.COLUMN_DURATION)) {
-            Byte duration = values.getAsByte(MealContract.MealEntry.COLUMN_DURATION);
+        if (values.containsKey(MealEntry.COLUMN_DURATION)) {
+            Byte duration = values.getAsByte(MealEntry.COLUMN_DURATION);
             if (duration == null || duration < 0) {
                 throw new IllegalArgumentException("Set duration time [min]");
             }
         }
 
-        if (values.containsKey(MealContract.MealEntry.COLUMN_TIME)) {
+        if (values.containsKey(MealEntry.COLUMN_TIME)) {
             try {
-                Date date = format.parse(values.getAsString(MealContract.MealEntry.COLUMN_TIME));
+                Date date = DATE_INSTANCE.parse(values.getAsString(MealEntry.COLUMN_TIME));
             } catch (ParseException e) {
                 throw new IllegalArgumentException("Set date and time of meal");
             }
@@ -205,7 +215,7 @@ public class MealProvider extends ContentProvider {
 
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
-        int rowsUpdated = database.update(MealContract.MealEntry.TABLE_NAME, values, selection, selectionArgs);
+        int rowsUpdated = database.update(MealEntry.TABLE_NAME, values, selection, selectionArgs);
 
         if (rowsUpdated != 0) {
             getContext().getContentResolver().notifyChange(uri, null);

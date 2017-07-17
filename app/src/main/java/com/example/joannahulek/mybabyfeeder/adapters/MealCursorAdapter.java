@@ -1,4 +1,4 @@
-package com.example.joannahulek.mybabyfeeder;
+package com.example.joannahulek.mybabyfeeder.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
+import com.example.joannahulek.mybabyfeeder.R;
 import com.example.joannahulek.mybabyfeeder.data.MealContract;
 
 /**
@@ -39,16 +40,12 @@ public class MealCursorAdapter extends CursorAdapter {
 
         String mealType = cursor.getString(mealTypeColumnIndex);
         String capacity = cursor.getString(capacityColumnIndex);
+        String duration = cursor.getString(durationColumnIndex);
+        String time = cursor.getString(timeColumnIndex);
 
-
-        // If the pet breed is empty string or null, then use some default text
-        // that says "Unknown breed", so the TextView isn't blank.
-        //if (TextUtils.isEmpty(capacity)) {
-        //     capacity = context.getString(R.string.unknown_breed);
-        // }
-
-        // Update the TextViews with the attributes for the current pet
         mealTypeTextView.setText(mealType);
         capacityTextView.setText(capacity);
+        durationTextView.setText(duration);
+        timeTextView.setText(time);
     }
 }

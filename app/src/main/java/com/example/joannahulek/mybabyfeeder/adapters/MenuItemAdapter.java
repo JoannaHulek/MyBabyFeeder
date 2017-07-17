@@ -1,7 +1,6 @@
-package com.example.joannahulek.mybabyfeeder;
+package com.example.joannahulek.mybabyfeeder.adapters;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,9 +9,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.List;
+import com.example.joannahulek.mybabyfeeder.specifics.MenuItem;
+import com.example.joannahulek.mybabyfeeder.R;
 
-import static android.R.attr.resource;
+import java.util.List;
 
 /**
  * Created by Joasia on 14.07.2017.

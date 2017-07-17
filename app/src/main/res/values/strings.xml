@@ -6,4 +6,9 @@
     <string name="add_spoon">Spoon meal</string>
     <string name="see_meals">See meals list</string>
     <string name="add_meal">Add meal:</string>
+    <string name="capacity">Capacity:</string>
+    <string name="ml">[ml]</string>
+    <string name="duration">Duration:</string>
+    <string name="date_and_time">Date and time:</string>
+    <string name="time_and_date">Time and date</string>
 </resources>
