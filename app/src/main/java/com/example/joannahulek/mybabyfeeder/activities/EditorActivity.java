@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.joannahulek.mybabyfeeder.R;
+import com.example.joannahulek.mybabyfeeder.data.MealContract;
 import com.example.joannahulek.mybabyfeeder.data.MealContract.MealEntry;
 import com.example.joannahulek.mybabyfeeder.data.MealType;
 import com.example.joannahulek.mybabyfeeder.fragments.DatePickerFragment;
@@ -81,25 +82,19 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     private void addMeal(EditText capacityEditText, EditText durationEditText, TextView timeTextView, MealType mealType) {
-
-        Short capacity = new Short(capacityEditText.getText().toString());
-        Short duration = new Short(durationEditText.getText().toString());
-
         BabyMeal meal = null;
+        Uri mealUri = null;
         try {
+            Short capacity = new Short(capacityEditText.getText().toString());
+            Short duration = new Short(durationEditText.getText().toString());
             meal = new BabyMeal(null, mealType, capacity, duration, DATE_INSTANCE.parse(timeTextView.getText().toString()));
-        } catch (ParseException e) {
-            throw new InvalidParameterException(timeTextView.getText().toString() + " has bad format");
+            mealUri = getContentResolver().insert(MealEntry.CONTENT_URI, meal.transformToContentValues());
+        } catch (Exception e) {
+            Toast.makeText(this, getString(R.string.insert_failed), Toast.LENGTH_SHORT).show();
         }
-        Uri newUri = getContentResolver().insert(MealEntry.CONTENT_URI, meal.transformToContentValues());
-
-        if (newUri == null) {
-            Toast.makeText(this, getString(R.string.insert_failed),
-                    Toast.LENGTH_SHORT).show();
-        } else {
+        if (mealUri != null) {
             Toast.makeText(EditorActivity.this, getString(R.string.meal_saved), Toast.LENGTH_SHORT).show();
         }
-
         Intent i = new Intent(EditorActivity.this, MealsActivity.class);
         startActivity(i);
     }
