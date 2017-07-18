@@ -74,5 +74,4 @@
             android:textAppearance="?android:textAppearanceMedium" />
 
     </LinearLayout>
-
 </RelativeLayout>
