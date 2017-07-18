@@ -25,8 +25,8 @@ public class MealDbHelper extends SQLiteOpenHelper {
         String SQL_CREATE_MEALS_TABLE = "CREATE TABLE " + MealContract.MealEntry.TABLE_NAME + " ("
                 + MealContract.MealEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + MealContract.MealEntry.COLUMN_MEAL_TYPE + " MealType NOT NULL, "
-                + MealContract.MealEntry.COLUMN_CAPACITY + " SHORT NOT NULL, "
-                + MealContract.MealEntry.COLUMN_DURATION + " SHORT NOT NULL, "
+                + MealContract.MealEntry.COLUMN_CAPACITY + " INTEGER NOT NULL, "
+                + MealContract.MealEntry.COLUMN_DURATION + " INTEGER NOT NULL, "
                 + MealContract.MealEntry.COLUMN_TIME + " DATE NOT NULL);";
 
         db.execSQL(SQL_CREATE_MEALS_TABLE);

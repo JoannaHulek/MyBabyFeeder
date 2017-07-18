@@ -3,7 +3,6 @@ package com.example.joannahulek.mybabyfeeder.specifics;
 import com.example.joannahulek.mybabyfeeder.data.MealType;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Created by Joasia on 14.07.2017.

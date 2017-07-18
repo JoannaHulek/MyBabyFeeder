@@ -5,10 +5,19 @@
     <string name="add_bottle">Bottle</string>
     <string name="add_spoon">Spoon meal</string>
     <string name="see_meals">See meals list</string>
-    <string name="add_meal">Add meal:</string>
+    <string name="add_meal">Add meal</string>
+    <string name="add_baby_meal">Add baby meal:</string>
     <string name="capacity">Capacity:</string>
     <string name="ml">[ml]</string>
     <string name="duration">Duration:</string>
-    <string name="date_and_time">Date and time:</string>
-    <string name="time_and_date">Time and date</string>
+    <string name="set_date_and_time">Date and time</string>
+    <string name="meal_saved">Meal saved</string>
+    <string name="invalid_capacity">Set correct capacity!</string>
+    <string name="invalid_duration">Set correct duration!</string>
+    <string name="insert_failed">Error with saving meal</string>
+    <string name="min">[min]</string>
+    <string name="fill_the_form">Please fill the form:</string>
+    <string name="meal_type_label">MEAL TYPE</string>
+    <string name="date_and_time_label">DATE AND TIME</string>
+    <string name="no_meals">There are no meals yet</string>
 </resources>

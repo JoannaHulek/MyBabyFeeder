@@ -9,8 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.joannahulek.mybabyfeeder.specifics.MenuItem;
 import com.example.joannahulek.mybabyfeeder.R;
+import com.example.joannahulek.mybabyfeeder.specifics.MenuItem;
 
 import java.util.List;
 
@@ -20,6 +20,7 @@ import java.util.List;
 
 public class MenuItemAdapter extends ArrayAdapter<MenuItem> {
     private final int menuTemplateResource;
+
     public MenuItemAdapter(@NonNull Context context, @NonNull List<MenuItem> objects, int menuTemplateResource) {
         super(context, 0, objects);
         this.menuTemplateResource = menuTemplateResource;

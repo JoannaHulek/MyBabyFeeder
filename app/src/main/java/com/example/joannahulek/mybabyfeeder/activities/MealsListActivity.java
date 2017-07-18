@@ -1,18 +1,18 @@
 package com.example.joannahulek.mybabyfeeder.activities;
 
 import android.database.Cursor;
+import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 
-import com.example.joannahulek.mybabyfeeder.adapters.BabyMealCursorAdapter;
 import com.example.joannahulek.mybabyfeeder.R;
-import com.example.joannahulek.mybabyfeeder.data.MealContract;
+import com.example.joannahulek.mybabyfeeder.adapters.BabyMealCursorAdapter;
 import com.example.joannahulek.mybabyfeeder.data.MealContract.MealEntry;
 
 public class MealsListActivity extends AppCompatActivity implements
@@ -47,7 +47,11 @@ public class MealsListActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meals_list);
+
         ListView mealsListView = (ListView) findViewById(R.id.meals_list_view);
+
+        View emptyView = findViewById(R.id.empty_view);
+        mealsListView.setEmptyView(emptyView);
 
         mCursorAdapter = new BabyMealCursorAdapter(this, null);
         mealsListView.setAdapter(mCursorAdapter);

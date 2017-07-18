@@ -1,6 +1,5 @@
 package com.example.joannahulek.mybabyfeeder.layout.wrappers;
 
-import android.view.View;
 import android.widget.TextView;
 
 /**

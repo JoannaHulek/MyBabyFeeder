@@ -10,7 +10,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:orientation="vertical">
 
         <ImageView
@@ -74,31 +73,36 @@
                 android:id="@+id/duration_unit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="[min]" />
+                android:text="@string/min" />
         </LinearLayout>
 
-
-        <EditText
-            android:id="@+id/time_input"
+        <LinearLayout
+            android:id="@+id/time_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/time_and_date" />
+            android:orientation="horizontal">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/time_button"/>
+            <TextView
+                android:id="@+id/time_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
+            <Button
+                android:id="@+id/time_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/set_date_and_time"
+                android:textAppearance="?android:textAppearanceMedium" />
+        </LinearLayout>
     </LinearLayout>
 
     <Button
+        android:id="@+id/add_meal_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:text="@string/add_meal"
-        android:id="@+id/add_meal_button"
-        android:textAppearance="?android:textAppearanceMedium"
-        />
-
+        android:textAppearance="?android:textAppearanceMedium" />
 </RelativeLayout>

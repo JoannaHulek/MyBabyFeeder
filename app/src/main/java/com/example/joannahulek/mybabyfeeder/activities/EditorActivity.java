@@ -1,9 +1,9 @@
 package com.example.joannahulek.mybabyfeeder.activities;
 
-import android.content.ContentValues;
+import android.app.DialogFragment;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,9 +11,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.joannahulek.mybabyfeeder.R;
-import com.example.joannahulek.mybabyfeeder.data.MealContract;
 import com.example.joannahulek.mybabyfeeder.data.MealContract.MealEntry;
 import com.example.joannahulek.mybabyfeeder.data.MealType;
 import com.example.joannahulek.mybabyfeeder.fragments.DatePickerFragment;
@@ -21,10 +22,8 @@ import com.example.joannahulek.mybabyfeeder.specifics.BabyMeal;
 
 import java.security.InvalidParameterException;
 import java.text.ParseException;
-import java.util.Date;
 
-import static android.R.attr.type;
-import static com.example.joannahulek.mybabyfeeder.R.drawable.meal;
+import static com.example.joannahulek.mybabyfeeder.specifics.BabyMeal.DATE_INSTANCE;
 
 public class EditorActivity extends AppCompatActivity {
 
@@ -61,7 +60,7 @@ public class EditorActivity extends AppCompatActivity {
 
         final EditText capacityEditText = (EditText) findViewById(R.id.capacity_input);
         final EditText durationEditText = (EditText) findViewById(R.id.duration_input);
-        final EditText timeEditText = (EditText) findViewById(R.id.time_input);
+        final TextView timeTextView = (TextView) findViewById(R.id.time_input);
 
         Button timeButton = (Button) findViewById(R.id.time_button);
         timeButton.setOnClickListener(new View.OnClickListener() {
@@ -76,24 +75,33 @@ public class EditorActivity extends AppCompatActivity {
         addMealButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addMeal(capacityEditText, durationEditText, timeEditText, mealType);
+                addMeal(capacityEditText, durationEditText, timeTextView, mealType);
             }
         });
-
-
     }
 
-    private void addMeal(EditText capacityEditText, EditText durationEditText, EditText timeEditText, MealType mealType) {
+    private void addMeal(EditText capacityEditText, EditText durationEditText, TextView timeTextView, MealType mealType) {
+
         Short capacity = new Short(capacityEditText.getText().toString());
         Short duration = new Short(durationEditText.getText().toString());
 
         BabyMeal meal = null;
         try {
-            meal = new BabyMeal(null, mealType, capacity, duration, BabyMeal.DATE_INSTANCE.parse(timeEditText.getText().toString()));
+            meal = new BabyMeal(null, mealType, capacity, duration, DATE_INSTANCE.parse(timeTextView.getText().toString()));
         } catch (ParseException e) {
-            throw new InvalidParameterException(timeEditText.getText().toString() + " has bad format");
+            throw new InvalidParameterException(timeTextView.getText().toString() + " has bad format");
         }
         Uri newUri = getContentResolver().insert(MealEntry.CONTENT_URI, meal.transformToContentValues());
+
+        if (newUri == null) {
+            Toast.makeText(this, getString(R.string.insert_failed),
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(EditorActivity.this, getString(R.string.meal_saved), Toast.LENGTH_SHORT).show();
+        }
+
+        Intent i = new Intent(EditorActivity.this, MealsActivity.class);
+        startActivity(i);
     }
 
     private void createMealTypeImage(MealType mealType) {

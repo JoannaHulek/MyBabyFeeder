@@ -1,21 +1,18 @@
 package com.example.joannahulek.mybabyfeeder.activities;
 
 import android.content.Intent;
-import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.example.joannahulek.mybabyfeeder.R;
+import com.example.joannahulek.mybabyfeeder.adapters.MenuItemAdapter;
 import com.example.joannahulek.mybabyfeeder.specifics.BabyMeal;
 import com.example.joannahulek.mybabyfeeder.specifics.MenuItem;
-import com.example.joannahulek.mybabyfeeder.adapters.MenuItemAdapter;
 import com.example.joannahulek.mybabyfeeder.specifics.MenuItemStore;
-import com.example.joannahulek.mybabyfeeder.R;
-import com.example.joannahulek.mybabyfeeder.data.MealContract;
-import com.example.joannahulek.mybabyfeeder.data.MealType;
 
 import java.util.Date;
 
